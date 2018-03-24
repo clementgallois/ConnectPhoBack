@@ -7,10 +7,16 @@ const auth = (app) => {
     // find the user
     try {
       const user = await User.findOne({username: req.body.username});
-      if (!user){
+      if (!user || !user.checkPassword(req.body.password)){
         return res.status(400).json({success:false, message:'login or password incorrect'});
       }
-      console.log(user);
+      const token = jwt.sign(user.toJSON(), app.get('secret'), {expiresIn: '7d'});
+      return res.json({
+        success:true,
+        message: 'Registration successful',
+        user: user.safeUser(),
+        token,
+      });
     } catch (err){
       return res.sendStatus(500);
     }
