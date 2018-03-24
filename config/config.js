@@ -1,6 +1,6 @@
 module.exports = {
 	database: {
-		'url': 'localhost:27017/connectPho',
+		'url': 'mongodb://localhost:27017/connectPho',
 	},
 	'secret': 'MudaMudaMudaMudaMudaMuda'
 
