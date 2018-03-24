@@ -1,5 +1,7 @@
-const auth = require('./controllers/auth')
+const auth = require('./controllers/auth');
 
-const configApiRoutes = (app, io) => {
-  console.log(auth)
+const apiRoutes = (app, io) => {
+  auth(app);
 };
+
+module.exports = apiRoutes;
