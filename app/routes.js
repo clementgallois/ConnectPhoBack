@@ -1,6 +1,6 @@
 const auth = require('./controllers/auth');
 
-const apiRoutes = (app, io) => {
+const apiRoutes = (app) => {
   auth(app);
 };
 

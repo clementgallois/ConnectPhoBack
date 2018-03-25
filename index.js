@@ -19,17 +19,15 @@ var io = require('socket.io')(server);
 mongoose.connect(config.database.url); // connect to our database
 
 const db = mongoose.connection;
-
+// eslint-disable-next-line no-console
 db.on('error', console.error.bind(console, 'connection error'));
-db.once('open', (callback) => {
-  console.log('Connection succeeded.');
-});
+// eslint-disable-next-line no-console
+db.once('open', () => { console.log('Connection succeeded.');});
 
 app.use(function(req, res, next) {
   // Set to true if you need the website to include cookies in the requests sent
   // to the API (e.g. in case you use sessions)
   res.setHeader('Access-Control-Allow-Credentials', true);
-
 
   // Allow any request headers
   res.header('Access-Control-Allow-Origin', '*');
@@ -60,4 +58,5 @@ require('./app/routes.js')(app, io); // api routes
 
 // launch
 app.listen(port);
+// eslint-disable-next-line no-console
 console.log('Listening on port : ' + port);
