@@ -25,6 +25,26 @@ db.once('open', (callback) => {
   console.log('Connection succeeded.');
 });
 
+app.use(function(req, res, next) {
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+
+  // Allow any request headers
+  res.header('Access-Control-Allow-Origin', '*');
+
+  // Allow any request headers
+  if (req.get('Access-Control-Request-Headers')){
+    res.setHeader('Access-Control-Allow-Headers', req.get('Access-Control-Request-Headers'));
+  }
+
+  // Request methods you wish to allow (all here)
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  // Pass to next layer of middleware
+  next();
+});
+
 
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.json()); // get information from html forms
