@@ -11,7 +11,7 @@ const auth = (app) => {
         return res.status(400).json({success:false, message:'login or password incorrect'});
       }
       const token = jwt.sign(user.toJSON(), app.get('secret'), {expiresIn: '7d'});
-      return res.json({
+      return res.status(200). json({
         success:true,
         message: 'Registration successful',
         user: user.safeUser(),

@@ -20,9 +20,9 @@ userSchema.methods.generateHash = (password) => {
 userSchema.methods.safeUser = function () {
   return {
     _id: this._id,
-    email : this.email,
+    //email : this.email,
     username : this.username,
-    pictureUrl : this.pictureUrl || '../../public/images/imagedefault.png',
+    pictureUrl : this.pictureUrl || '/imageDefault.png',
   };
 };
 

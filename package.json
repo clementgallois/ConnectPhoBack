@@ -20,11 +20,13 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.0",
     "mongoose": "^5.0.11",
     "morgan": "^1.9.0",
     "socket.io": "^2.0.4",
+    "socketio-jwt": "^4.5.0",
     "validator": "^9.4.1"
   },
   "devDependencies": {
