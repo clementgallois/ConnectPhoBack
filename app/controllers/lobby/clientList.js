@@ -21,6 +21,7 @@ class clientList {
       if (this.list[i].user._id.toString() === decoded_token._id){
         this.list[i].deleteSocket(socket.client.id);
         if (this.list[i].sockets.length < 1){
+          this.list.splice(i,1);
           return true;
         }
         return false;
@@ -28,8 +29,25 @@ class clientList {
     }
   }
 
+  addRoom(decoded_token, room){
+    for (let i = 0; i < this.list.length; i++){
+      if (this.list[i].user._id.toString() === decoded_token._id){
+        if (!this.list[i].rooms.includes(room)){
+          this.list[i].addRoom(room);
+          return true;
+        }
+        return false;
+      }
+    }
+    return false;
+  }
+
   getUserList(){
     return this.list.map(e => e.user);
+  }
+
+  findClient(id){
+    return this.list.find((client) => client.user._id.toString() === id);
   }
 
   getClients(){

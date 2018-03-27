@@ -4,6 +4,15 @@ class client{
   constructor(user, socket){
     this.user = new User(user).safeUser();
     this.sockets = [socket];
+    this.rooms = [];
+  }
+
+  addRoom(room){
+    this.rooms.push(room);
+  }
+
+  deleteRoom(room){
+    this.rooms.splice(this.rooms.indexOf(room), 1);
   }
 
   addSocket(socket){
