@@ -1,17 +1,27 @@
 const User = require('../../models/user.js');
+const clientList = require('./clientList');
 
 const lobby = (io) => {
 
+  // const client = (user, socket)=>{
+  //   return {user, socket};
+  // };
+
+  let clients = new clientList();
+
   io.on('connection', function (socket) {
-    const clients = io.of('/').clients().connected;
-    socket.emit('USER_LIST',
-      Object.keys(clients).map(
-        e => new User(clients[e].decoded_token).safeUser()
-      )
-    );
-    socket.broadcast.emit('ADD_USER', new User(socket.decoded_token).safeUser());
+
+    let added = clients.addClient(socket.decoded_token, socket);
+    socket.emit('USER_LIST', clients.getUserList());
+    if (added === true){
+      socket.broadcast.emit('ADD_USER', new User(socket.decoded_token).safeUser());
+    }
+
     socket.on('disconnect', function(){
-      socket.broadcast.emit('DEL_USER', new User(socket.decoded_token).safeUser());
+      let deleted = clients.deleteClient(socket.decoded_token, socket);
+      if (deleted === true){
+        socket.broadcast.emit('DEL_USER', new User(socket.decoded_token).safeUser());
+      }
     });
   });
 
