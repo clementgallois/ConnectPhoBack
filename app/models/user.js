@@ -7,7 +7,8 @@ var userSchema = mongoose.Schema({
   email : { type: String, required: true, unique: true },
   password : { type: String, required: true },
   username : { type: String, required: true, unique: true },
-  pictureUrl : String,
+  sockets: [{ type:String }],
+  pictureUrl : {type: String, default: '/imageDefault.png'},
   verified : { type: Boolean }
 });
 
@@ -22,10 +23,23 @@ userSchema.methods.safeUser = function () {
     _id: this._id,
     //email : this.email,
     username : this.username,
-    pictureUrl : this.pictureUrl || '/imageDefault.png',
+    pictureUrl : this.pictureUrl,
   };
 };
 
+userSchema.methods.findConnectedUser = function() {
+  return this.db.model('User').find({
+    sockets: {
+      $exists: true,
+      $not: { $size: 0 }
+    }
+  },
+  {
+    email:0,
+    password:0,
+    sockets:0,
+  });
+};
 
 userSchema.methods.isValid = function() {
   if (!validator.isEmail(this.email)){
