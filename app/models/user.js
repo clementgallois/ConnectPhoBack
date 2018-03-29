@@ -21,7 +21,6 @@ userSchema.methods.generateHash = (password) => {
 userSchema.methods.safeUser = function () {
   return {
     _id: this._id,
-    //email : this.email,
     username : this.username,
     pictureUrl : this.pictureUrl,
   };
@@ -51,6 +50,17 @@ userSchema.methods.isValid = function() {
     return 'Password can\'t be empty';
   }
   return null;
+};
+
+userSchema.methods.emitAll = function(socket, name, payload){
+  this.sockets.forEach((id) => {
+    if (socket.id === id){
+      socket.emit(name, payload);
+    }
+    else{
+      socket.to(id).emit(name, payload);
+    }
+  });
 };
 
 // checking if password match

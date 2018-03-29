@@ -44,7 +44,6 @@ io.use(socketioJwt.authorize({
 }));
 
 // routes
-//require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 require('./app/routes.js')(app, io); // api routes
 
 // launch

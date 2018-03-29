@@ -1,6 +1,5 @@
 const User = require('../../models/user.js');
 const Room = require('../../models/room.js');
-
 const room = (socket) => {
   socket.on('INVITE', async function (data){
     // don't invite yourself
@@ -28,13 +27,9 @@ const room = (socket) => {
     });
     await room.save();
     socket.join(room._id);
-    const opponentInfo = await User.findOne(room.opponent.info);
-    socket.emit('ROOM_JOINED', { room:room._id, opponent: opponentInfo.safeUser()} );
-    const source = await User.findOne({_id: socket.decoded_token._id});
-    if (!source){return;}
-    client.sockets.forEach((id) => {
-      socket.broadcast.to(id).emit('INVITE_RECEIVED', {from: source.safeUser(), room: room._id});
-    });
+    await room.populateRoom();
+    socket.emit('ROOM_JOINED', {...room.toObject(), isOwner:true });
+    client.emitAll(socket, 'INVITE_RECEIVED', room.toObject());
   });
 
   socket.on('JOIN_ROOM', async function(data){
@@ -47,14 +42,14 @@ const room = (socket) => {
       socket.emit('ERROR', {message:'You are already in this room'});
       return;
     }
-    // Room.findOneAndUpdate({_id:data.room}, {$set:{ready:true}})
     room.opponent.ready=true;
     await room.save();
     socket.join(room._id);
-    const source = await User.findOne({_id: room.owner.id});
-    socket.emit('ROOM_JOINED', { room:room._id, opponent: source.safeUser()} );
-    const owner = await User.findOne({_id: socket.decoded_token._id});
-    socket.broadcast.to(room._id).emit('READY', {room: room.id, opponent: owner.safeUser()} );
+    const owner = await User.findOne({_id:room.owner.id});
+    const client = await User.findOne({_id:socket.decoded_token._id});
+    await room.populateRoom();
+    client.emitAll(socket,'ROOM_JOINED', {...room.toObject(), isOwner:false} );
+    owner.emitAll(socket, 'READY', room.toObject() );
   });
 };
 
