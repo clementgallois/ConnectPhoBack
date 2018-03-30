@@ -17,7 +17,7 @@ roomSchema.methods.getUserRooms = async function(id){
       $match:{
         $or: [
           {'owner.id': mongoose.Types.ObjectId(id)},
-          {'opponent.id': mongoose.Types.ObjectId(id)}
+          {'opponent.id': mongoose.Types.ObjectId(id), 'opponent.ready': true}
         ]
       }
     },
